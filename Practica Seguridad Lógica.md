@@ -132,6 +132,36 @@ Manual de uso: https://www.faronics.com/assets/DFS_Manual_S.pdf
 
 Realiza en Windows Server y el Ubuntu Server la configuración básica para el establecimiento de las directivas de complejidad de las contraseñas que se van a utilizar.
 
+Para establecer las directivas de complejidad de contraseñas en Windows Server se hace en las directivas de contraseña que está en “Administrador del servidor -> Herramientas -> Directiva de seguridad local -> Configuración de cuenta -> Directivas de cuenta -> Directivas de contraseñas”. 
+
+Aquí seleccionamos dos Propiedades: 
+* La contraseña ha de cumplir los requisitos de complejidad, es decir contener minúsculas, mayúsculas, números, etc.
+* Longitud mínima de la contraseña que la estableces a los carácteres que quieras
+
+![](imagenes/E2-W/1.png)
+![](imagenes/E2-W/2.png)
+
+Para establecer la complejidad de contraseñas en Linux se debe instalar un paquete llamado “libpam-cracklib”
+
+![](imagenes/E2-L/1.png)
+
+Ahora si vemos el fichero “/etc/pam.d/common-password” podemos ver abajo los requisitos de contraseña por defecto y que podemos modificar con los siguientes parametros
+
+* retry: número de intentos antes de que el sistema devuelva un error en la autenticación y nos expulse.
+* minlen: es la longitud mínima de la contraseña, por defecto está en 8 caracteres.
+* difok: número de caracteres diferentes que debe tener la nueva clave en comparación con la antigua.
+* ucredit: caracteres en mayúscula que debe tener como mínimo o máximo.
+* lcredit: caracteres en minúscula que debe tener como mínimo o máximo.
+* dcredit: el número de dígitos que debe tener como mínimo o máximo.
+* ocredit: el número de otros caracteres (símbolos) que debe tener la clave como mínimo o máximo.
+
+Las opciones ucredit, lcredit,dcredit y ocredit pueden tener números negativos o positivos, para definir si queremos que tenga un rango de mínimo o máximo, por ejemplo:
+
+* lcredit=-2: significa que como mínimo debe tener 2 caracteres en minúscula.
+* lcredit=+2: significa que como máximo debe tener 2 caracteres en minúscula.
+
+![](imagenes/E2-L/3.png)
+
 ## Actividad 3- Ataques contra contraseñas en Sistemas Windows – FICHERO SAM -
 
 El objetivo de la práctica es obtener las contraseñas de los usuarios del siguiente fichero hash y que puedes descargar dentro de los recursos de la unidad. 
@@ -155,13 +185,97 @@ Resetea la clave de administración utilizando alguna de las distribuciones LIVE
 
 Utiliza BackTrack y John The Ripper para descubrir las contraseñas encriptadas de un equipo Ubuntu.
 
+Para atacar contraseñas en Linux hemos de combinar la información de los archivos “/etc/passwd” y “/etc/shadow” y lo añadimos al fichero “contra.out” luego atacamos ese fichero de contraseñas cifradas utilizando el formato “crypt” con el comando 
+
+    john --format-crypt
+
+Y finalmente mostramos las contraseñas descifradas con el comando
+
+    john –show
+
+![](imagenes/E5-J/1.png)
+
 ## Actividad 6.- Realiza un listado de este tipo de herramientas y analiza la instalación y configuración de 2 congeladores
+
+El congelador que voy a usar es DeepFreeze en Windows, en la primera ventana le damos a siguiente aceptando la instalación
+
+![](imagenes/E6/1.png)
+
+En la siguiente ventana aceptamos las condiciones del contrato de licencia, y le damos a siguiente
+
+![](imagenes/E6/2.png)
+
+Como solo vamos a hacer una prueba gratuita le damos al check de “Evaluación de uso” y siguiente
+
+![](imagenes/E6/3.png)
+
+Aquí seleccionaremos que unidades queremos congelar para que se guarde el estado actual de esa unidad y aunque hagamos cambios en el una vez reiniciemos el sistema volvera a su estado normal
+
+![](imagenes/E6/4.png)
+
+Aquí lo dejaremos por defecto y le damos a “Instalar”
+
+![](imagenes/E6/5.png)
+
+Esperamos a que se prepare la instalación
+
+![](imagenes/E6/6.png)
+
+Una vez que se haya instalado abrimos el programa y habrán 3 opciones en el menú superior lo primero será ir a “Contraseña” y cambiar la contraseña para que la próxima vez al abrir el programa te pida una contraseña
+
+![](imagenes/E6/7.png)
+
+Después en la opción “ThawSpace” se puede hacer que en una partición gurades ficheros que aunque reincies no se vean sujetos al congeador ni que se eliminen
+
+![](imagenes/E6/8.png)
+
+Ahora sería la creación de un monton de fichero para dar ejemplo del programa
+
+![](imagenes/E6/10.png)
+
+Luego nos vamos a la opción de “Control de acceso” dejamos la primera opción y le damos a “Aplicar y Reiniciar” una vez reiniciado el equipo no deberíamos ver ninguno de estos ficheros
+
+![](imagenes/E6/11.png)
 
 ## Actividad 7: GRUB.
 
 a) Protege con contraseña el GRUB, para que no se pueda ejecutar secuencia de comandos, como root, en el arranque.
 
 b) Protege contraseña el arranque de los sistemas operativos.
+
+Para proteger el inicio de los programas y no puedan ejecutar comandos usaremos grub2 para ello tendremos que instalarlo con el comando:
+
+    sudo apt install grub2
+
+![](imagenes/E7/1.png)
+
+Ahora lo que haremos sera crear una contraseña grub con el comando:
+
+    grub-mkpasswd-pkdf2
+    
+![](imagenes/E7/2.png)
+
+Luego modificamos el fichero “/etc/grub.d/00_header” y copiamos y pegamos la contraseña que antes nos han dado en la última linea del fichero  con el siguiente formato
+
+cat <<EOF
+
+set superuser=”root”
+
+password_pbkdf2 root *contraseña*
+
+EOF
+
+![](imagenes/E7/3.png)
+
+Finalmente restarteamos el paquete con:
+
+    sudo update-grub2
+    
+![](imagenes/E7/4.png)
+
+Ya finalmente si probamos a reiniciar la máquina vemos como para editar en el menú de grub nos pedira un nombre de usuario y contraseña
+
+![](imagenes/E7/5.png)
 
 ## Actividad 8: Servidor Radius. Autenticación en redes inalámbricas.
 
