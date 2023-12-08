@@ -8,19 +8,19 @@ Para empezar la prueba tenemos que tener un archivo de cualquier tipo e introduc
 
 Por ejemplo para cifrar el fichero fichero.txt:
 
-gpg -c fichero.txt
+    gpg -c fichero.txt
 
 Nos pide la clave de encriptación y nos genera el fichero fichero.txt.gpg.
 
 Para desencriptar el fichero simplemente ejecutamos:
 
-gpg -d fichero.txt.gpg
+    gpg -d fichero.txt.gpg
 
 Nos pide la clave y nos muestra el contenido del fichero original (Nota: si estáis usando gnome al introducir la clave para realizar la encriptación se guarda en una cache, por lo que no os va a pedir la clave a la hora de desencriptar)
 
 Si queremos recuperar el fichero original:
 
-gpg -d fichero.txt.gpg > fichero2.txt
+    gpg -d fichero.txt.gpg > fichero2.txt
 
 # Ejercicios:
 
@@ -33,7 +33,7 @@ gpg -d fichero.txt.gpg > fichero2.txt
 
 Ciframos el fichero de texto con:
 
-gpg -c fichero.txt
+    gpg -c fichero.txt
 
 Una vez ejecutas el comando introduces la contraseña
 
@@ -53,7 +53,7 @@ Te da una advertencia de que la contraseña es insegura, en mi caso me ha saltad
 
 Para descifrar la contraseña usamos el comando:
 
-gpg -d ficherosim.txt.gpg
+    gpg -d ficherosim.txt.gpg
 
 Luego introducimos la contraseña y podemos ver el contenido del fichero ya descifrado
 
@@ -64,7 +64,7 @@ Luego introducimos la contraseña y podemos ver el contenido del fichero ya desc
 
 Para ver los detalles del fichero encriptado usamos el comando:
 
-gpg --list-packets ficherosim.txt.gpg
+    gpg --list-packets ficherosim.txt.gpg
 
 Podemos ver que el algoritmo usado es AES256.CFB
 
@@ -73,7 +73,7 @@ Podemos ver que el algoritmo usado es AES256.CFB
 
 Como ya esta por defecto no hace falta describir el algoritmo pero en caso de querer especificarlo usamos el comando: 
 
-gpg –cipher-algo AES256 -c ficherosim.txt
+    gpg –cipher-algo AES256 -c ficherosim.txt
 
 ![imagen](https://github.com/EmanZouine/Seguridad-Logica-Eman/assets/117440289/18cbddb1-010a-4d9c-8825-667274a893da)
 
@@ -120,14 +120,14 @@ Aparecerá que se ha descifrado, lo vemos en la ruta donde se ha guardado y pode
 
 Para cifrar los ficheros con openssl de forma simétrica hemos de usar el comando 
 
-openssl enc -aes-256-cbc -in ficherosim.txt -out ficherosim.enc
+    openssl enc -aes-256-cbc -in ficherosim.txt -out ficherosim.enc
 
 ![imagen](https://github.com/EmanZouine/Seguridad-Logica-Eman/assets/117440289/6771804f-ef93-4b8b-9e68-90b1a3fae4f5)
 
 
 Para descifrar un fichero cifrado con openssl usamos el mismo comando que antes solo que añadimos el “-d” delante y cambiamos los ficheros, en “-in” pondremos el fichero cifrado de antes y en “-out” donde se guardará el fichero descifrado.
 
-openssl enc -d -aes-256-cbc -in ficherosim.enc -out ficherodescifrado.txt
+    openssl enc -d -aes-256-cbc -in ficherosim.enc -out ficherodescifrado.txt
 
 ![imagen](https://github.com/EmanZouine/Seguridad-Logica-Eman/assets/117440289/837aeea1-8dba-4a11-94d1-9d424960c71f)
 
